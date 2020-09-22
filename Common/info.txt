@@ -1,0 +1,27 @@
+CodeXP'S Net Messenger Common Files
+===================================
+
+Gemeinsam genutzte Komponente
+-----------------------------
+
+Es gibt einige Komponente wie z.B. Module die in mehreren
+Projekten genutzt werden. Diese Komponente befinden sich 
+im Verzeichnis Common. Die Änderungen an diesen Komponenten
+wirken auf alle Projekte aus in denen die Komponente 
+genutzt wird.
+
+
+  *** Module ***********************************************
+   Datei               Beschreibung
+  ----------------------------------------------------------
+  basString.bas       für String Manipulationen usw.
+  basTime.bas         Funktionen für Zeit und Datum berechnung.
+
+  *** Formulare ********************************************
+   Datei               Beschreibung
+  ----------------------------------------------------------
+  Dialog.frm          Ersatz für MessageBox (ohne Programmunterbrechung)
+  frmLogViewer.frm    Logging Fenster (für Debug Zwecke)
+  InputBox.frm        InputBox für Texteingaben (viel schöner und kleiner)
+  Console.frm         Console und Chatfenster in einer Form
+  
