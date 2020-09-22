@@ -1,0 +1,248 @@
+                         [german]
+
+               CNM Protokoll Befehlsreferenz
+               =============================
+
+
+
+  ANLEITUNG
+  =========
+
+Hier werden alle Protokoll Befehle der CNM Server/Client
+Kommunikation dokumentiert. Die Syntax ist mit IRC 
+Protokoll ähnlich.
+
+Befehlszeilen-Systax:
+
+[:user ]cmd[ P1[ P2[ Pn]]][:message]
+
+Die eckige Klammer [] bedeutet optional, das heißt:
+Die Elemente die in eckigen Klammern stehen können weg
+gelassen werden. Das was nicht in eckigen Klammern steht,
+muss in jedem Fall angegeben werden.
+
+Element      Beschreibung
+--------------------------------------------------------
+:user      - Die Benutzer ID des Clients, der die 
+             Befehlszeile gesendet hat, mit führendem
+             Doppelpunkt ':'. (optional)
+cmd        - Der Befehl selbst, muss in jedem Fall 
+             angegeben werden. (erforderlich)
+Px         - Die als P1, P2 und Pn angegebene Elemente
+             sind Parameter. Die Parameter erweitern den
+             Befehl. Es können bis zu 10 Parameter über-
+             geben werden. (optional)
+:message   - Das ist die Nachricht die der Client-
+             Benutzer lesen kann. In einigen Fällen ist
+             diese Message einfach eine Erweiterung der
+             Funktion eines komplexen Befehls.
+--------------------------------------------------------
+Jeder dieser Elemente, außer :message, dürfen keine
+Leerzeichen oder eins der reservierten Sonderzeichen
+enthalten. Die Elemente werden durch einen einzigen
+Leerzeichen (' '-Space) von einander getrennt. Nur der
+Element :message darf jeden beliebigen Zeichen der ASCII
+Tabelle enthalten. Der Element :user beginnt mit doppel-
+punkt (':'), wobei dieser der erste Zeichen der Befehls-
+zeile ist, und direkt danach folgt die Benutzer ID des 
+Clients.
+
+Beispiele für vollständige Befehlszeilen:
+
+Eine private nachricht an MrX von MrY:
+ +-----------------------------------------------------+
+ |:MrY privmsg MrX:Hallo MrX! Wie geht's?              |
+ +-----------------------------------------------------+
+
+Den Server "Pingen":
+ +-----------------------------------------------------+
+ |ping                                                 |
+ +-----------------------------------------------------+
+
+Die Befehlszeilen werden mit Zeilenumbruch (CrLf)
+getrennt. Jede Befehlszeile muss mit Zeilenumbruch
+abgeschlossen werden.
+
+
+
+  BEFEHLSREFERENZ
+  ===============
+
+
+
+###[000]################################################
+      Befehl: '000'
+Seit Version: 1.0
+BefehlSyntax: 000[ Cmd[ Params]][:Message]
+BefehlsSeite: Client
+Beschreibung: 
+  Der Befehl 000 ist die Antwort auf alle Befehle die
+  nicht ausgeführt werden konnten. Der erste Parameter
+  Cmd, falls vorhanden, ist der letzter Befehl der nicht
+  aufgeführt werden konnte. Der zweite oder weitere
+  Parameter beschreiben den Fehler. Die :Message ist
+  die Fehlermeldung die der Benutzer lesen sollte.
+  Das Gegenteil stellt der Befehl 001 dar.
+Reaktion: keine / Fehlerbehandlung.
+
+
+
+###[001]################################################
+      Befehl: '001'
+Seit Version: 1.0
+BefehlSyntax: 001[ Cmd[ Params]][:Message]
+BefehlsSeite: Client
+Beschreibung: 
+  Der Befehl 001 ist die Antwort auf einige Befehle die
+  mit Erfolg ausgeführt wurden. Der erste Parameter
+  Cmd, falls vorhanden, ist der letzter Befehl der
+  aufgeführt wurde. Der zweite oder weitere Parameter
+  beschreiben den Erfolg. Die :Message ist die Erfolgs-
+  meldung die der Benutzer lesen sollte.
+  Das Gegenteil stellt der Befehl 000 dar.
+Reaktion: keine / Ereignisbehandlung.
+
+
+
+###[PING]###############################################
+      Befehl: 'PING'
+Seit Version: 1.0
+BefehlSyntax: PING [TIMESTAMP]
+BefehlsSeite: Server/Client
+Beschreibung: 
+  Mit Ping kann man die Verbindung testen.
+  Es wird eine Zahl, die mit Ping kam, zurück gesendet.
+  Mithilfe von dieser Zahl, die dann zum Sender zurück
+  kommt, kann man die Dauer der Übertragung errechnen.
+Reaktion:
+  Den Befehl Pong mit allen mit Ping erhaltenen
+  Parametern an den Sender zurück senden.
+  +----------------------------------------------------+
+  |PONG [TIMESTAMP]                                    |
+  +----------------------------------------------------+
+
+
+
+###[PONG]###############################################
+      Befehl: 'PONG'
+Seit Version: 1.0
+BefehlSyntax: PONG [TIMESTAMP]
+BefehlsSeite: Server/Client
+Beschreibung:
+  Der Befehl Pong ist die Antwort auf Befehl Ping.
+  Für weitere Informationen siehe Ping.
+Reaktion: keine / Dauer errechnen (Jetzt-[TIMESTAMP])
+
+
+
+###[JOIN]###############################################
+      Befehl: 'JOIN'
+Seit Version: 1.0
+BefehlSyntax: JOIN #Channel
+BefehlsSeite: Server/Client
+Beschreibung:
+  Mit dem Befehl Join tritt man einem Channel (Raum) bei.
+  Der erste Parameter ist der Name des Channels in den
+  der Sender beitretten soll.
+  Das Gegenteil stellt der Befehl Part dar.
+Reaktion:
+  Client: Wenn :user mit der Benutzer ID des Clients
+          übereinstimmt, dann ein neues Channelfenster
+          öffnen, sonst den Benutzer :user in die
+          Benutzerliste des Channelfensters eintragen.
+  Server: Sendet Join #Channel an den Sender zurück.
+          Es werden nun alle Nachrichten aus diesem
+          Channel an den Sender geschickt.
+  +----------------------------------------------------+
+  |JOIN #Channel                                       |
+  +----------------------------------------------------+
+
+
+
+###[PART]###############################################
+      Befehl: 'PART'
+Seit Version: 1.0
+BefehlSyntax: PART #Channel
+BefehlsSeite: Server/Client
+Beschreibung:
+  Mit dem Befehl Part verlässt man einen Channel (Raum).
+  Der erste Parameter ist der Name eines Channels der
+  verlassen werden soll.
+  Das Gegenteil stellt der Befehl Join dar.
+Reaktion:
+  Client: Wenn :user mit der Benutzer ID des Clients
+          übereinstimmt, dann das Channelfenster
+          schließen, sonst den Benutzer :user aus der
+          Benutzerliste des Channelfensters entfernen.
+  Server: Sendet Part #Channel zurück an den Sender.
+          Es werden keine Nachrichten mehr aus diesem
+          Channel an den Sender geschickt.
+  +----------------------------------------------------+
+  |PART #Channel                                       |
+  +----------------------------------------------------+
+
+
+
+###[PRIVMSG]############################################
+      Befehl: 'PRIVMSG'
+Seit Version: 1.0
+BefehlSyntax: PRIVMSG #Channel|User:Message
+BefehlsSeite: Server/Client
+Beschreibung:
+  Mit diesem Befehl werden Nachrichten verschickt.
+  Es gibt zwei Arten der Nachrichten. Die erste ist
+  eine private Benutzernachricht, die nur der gemeinte
+  Benuzter erhält. Und die zweite ist eine Channel-
+  nachricht, die an eine bestimmte Gruppe von Benutzern
+  geschickt wird, die in diesem Channel eingetragen sind.
+  Der erste Parameter ist entweder Benutzer ID oder Name
+  des Channels, wo die Nachricht hin gelangt. Der
+  einzige Unterschied ist, dass der Name des Channels
+  mit dem führendem Rautezeichen ('#') beginnt.
+  Die Nachricht selbst wird als :Message übergeben.
+Reaktion:
+  Client: Wenn Channelfenster/Privatefenster nicht
+          existiert, dann wird ein neues geöfnet.
+          Nachricht in den Channelfenster/Privatefenster
+          hinzufügen, wobei :user den Sender darstellt.
+  Server: Sendet dieselbe Befehlszeile an alle
+          betroffene Benutzer, wobei der Sender
+          ebenfalls betroffen ist.
+  +----------------------------------------------------+
+  |PRIVMSG #Channel|User:Message                       |
+  +----------------------------------------------------+
+
+
+
+###[USERS]##############################################
+      Befehl: 'USERS'
+Seit Version: 1.0
+BefehlSyntax: USERS [#Channel]
+BefehlsSeite: Server/Client
+Beschreibung:
+  Mit dem Befehl Users fordert man eine Liste der
+  Benutzer an, die auf dem Server oder in einem Channel
+  eingetragen sind. Diese Liste wird vom Server
+  zusammengestellt und an den Sender geschickt.
+  Der erste Parameter ist der Name des Channels, kann
+  aber auch fehlen, falls man eine Liste mit allen
+  Benutzern auf dem Server anfordern möchte.
+Reaktion:
+  Client: Die Liste im betroffenen Fenster aktualisieren.
+  Server: Schickt eine zusammengestellte Benutzerliste
+          als :UserList zum Sender.
+  +----------------------------------------------------+
+  |USERS [#Channel]:UserList                           |
+  +----------------------------------------------------+
+  Die Liste mit den Benutzern stellt :UserList dar,
+  wobei jeder Benutzer in der Liste durch ein
+  Kommazeichen (',') getrennt ist. Die Rechte (Flags)
+  des Benutzers werden als Zahl (Long) an die Benutzer
+  ID mit einem führenden Querstrich ('|') drangehängt.
+  Eine Befehlszeile die :UserList enthält könnte
+  folgendermassen aussehen: (Beispiel)
+  +----------------------------------------------------+
+  |USERS #Moo:Foo|2,Bar,UserX|4,Unknown                |
+  +----------------------------------------------------+
+  Das würde bedeuten: In dem Channel #Moo sind Foo als
+  Operator, Bar, UserX mit Voice und Unknown anwesend.  
